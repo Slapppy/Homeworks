@@ -27,7 +27,6 @@ def HTMLCheck(newfile):
     stack = Stack()
     list1 = []
     append_tags(newfile, list1)
-    index = 0
     for ch in list1:
         if ch == '<div>':
             stack.push(ch)
@@ -50,7 +49,7 @@ def HTMLCheck(newfile):
                 return False
             else:
                 stack.pop()
-        index += 1
+
 
     return stack.is_empty()
 
