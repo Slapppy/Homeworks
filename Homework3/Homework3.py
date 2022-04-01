@@ -22,6 +22,7 @@ class User:
 class UserController:
 
     @staticmethod
+
     def send_message(self, message, to):
         with open('messages.csv', 'a') as f_object:
             writer_object = writer(f_object, delimiter=',')
