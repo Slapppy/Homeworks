@@ -10,24 +10,32 @@ class User:
         self.name = name
 
     def send_message(self, message, to):
-        with open('messages.csv', 'a') as f_object:
-            writer_object = writer(f_object, delimiter=',')
-            writer_object.writerow([randint(10000, 99999)] +
-                                   [self.name + " " + self.ser_name] + [to] + [message] + [datetime.now()])
-            f_object.close()
+        userConroller.send_message(self, message, to)
 
     def delete_message(self, id):
-        df = pd.read_csv('messages.csv', delimiter=',', header=None)
-        df.columns = ['idx', 'from', 'to', 'message', 'time']
-        df.set_index('idx', inplace=True)
-        result = df.drop(id)
-        return result.to_csv('messages.csv', header=False)
+        UserController.delete_message(id)
 
     def __repr__(self):
         return self.name + " " + self.ser_name
 
 
 class UserController:
+
+    @staticmethod
+    def send_message(self, message, to):
+        with open('messages.csv', 'a') as f_object:
+            writer_object = writer(f_object, delimiter=',')
+            writer_object.writerow([randint(10000, 99999)] +
+                                   [self.name + " " + self.ser_name] + [to] + [message] + [datetime.now()])
+            f_object.close()
+
+    @staticmethod
+    def delete_message(id):
+        df = pd.read_csv('messages.csv', delimiter=',', header=None)
+        df.columns = ['idx', 'from', 'to', 'message', 'time']
+        df.set_index('idx', inplace=True)
+        result = df.drop(id)
+        return result.to_csv('messages.csv', header=False)
 
     @staticmethod
     def get_all_messages(first_user, second_user):
@@ -44,4 +52,4 @@ Bob = User('Bob', 'Kelly')
 Tom = User('Tom', 'Ford')
 
 userConroller = UserController
-userConroller.get_all_messages('Tom Ford', 'Bob Kelly')
+userConroller.delete_message(93160)
