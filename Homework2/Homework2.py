@@ -15,12 +15,17 @@ class Stack:
         return self.items.pop()
 
 
+check_tags = ['<div>', '<h1>', '<p>', '</div>', '</h1>', '</p>']
+open_tags = ['<div>', '<h1>', '<p>']
+
+
 def append_tags(open_file, list_):
     with open(open_file, 'r') as file:
         f = file.read()
         tags = re.findall(r'<[^>]+>', f)
         for a in tags:
-            list_.append(a)
+            if a in check_tags:
+                list_.append(a)
 
 
 def HTMLCheck(newfile):
@@ -28,30 +33,23 @@ def HTMLCheck(newfile):
     list1 = []
     append_tags(newfile, list1)
     for ch in list1:
-        if ch == '<div>':
+        if ch in open_tags:
             stack.push(ch)
-        elif ch == '</div>':
-            if stack.is_empty():
-                return False
-            else:
-                stack.pop()
-        if ch == '<p>':
-            stack.push(ch)
-        elif ch == '</p>':
-            if stack.is_empty():
-                return False
-            else:
-                stack.pop()
-        if ch == '<h1>':
-            stack.push(ch)
-        elif ch == '</h1>':
-            if stack.is_empty():
-                return False
-            else:
-                stack.pop()
+        else:
+            curr_char = stack.pop()
+            if curr_char == '<div>':
+                if ch != "</div>":
+                    return False
+            if curr_char == '<p>':
+                if ch != "</p>":
+                    return False
+            if curr_char == '<h1>':
+                if ch != "</h1>":
+                    return False
 
-
-    return stack.is_empty()
+    if stack.is_empty():
+        return True
+    return False
 
 
 print(HTMLCheck('test.html'))
