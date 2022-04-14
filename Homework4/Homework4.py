@@ -21,5 +21,4 @@ def parse_data(path_to_save):
         except OSError:
             continue
 
-
 parse_data(path_)
