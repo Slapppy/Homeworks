@@ -1,38 +1,48 @@
 import os
 import shutil
-import requests
+import numpy as np
 import threading
+import requests
 
-page = int(input('Enter the page '))
-if page > 2:
-    raise ValueError('Число должно быть не больше 2')
-
-
-response = requests.get(f'https://reqres.in/api/users?page={page}')
-currencies = response.json()['data']
 path_ = '../Homework5/users_data/'
 
 
-def parse_data(path_to_save):
-    for i in range(len(currencies)):
-        img = requests.get(currencies[i]['avatar'], stream=True)
-        path = path_to_save + str(currencies[i]['id'])
+def parse_users(users, path_to_save):
+    for user in users:
         try:
+            img = requests.get(user['avatar'], stream=True)
+            path = path_to_save + str(user['id'])
             os.mkdir(path)
             with open(path + '/avatar.png', 'wb') as f:
                 shutil.copyfileobj(img.raw, f)
             with open(path + "/user_info.txt", "w") as file:
-                file.writelines(f"{str(currencies[i]['email'])}, "
-                                f"{str(currencies[i]['first_name'])} {str(currencies[i]['last_name'])}")
+                file.writelines(f"{str(user['email'])}, "
+                                f"{str(user['first_name'])} {str(user['last_name'])}")
         except OSError:
             continue
 
 
-thread1 = threading.Thread(target=parse_data, name='t1', args=[path_])
-thread2 = threading.Thread(target=parse_data, name='t2', args=[path_])
-thread3 = threading.Thread(target=parse_data, name='t3', args=[path_])
-thread4 = threading.Thread(target=parse_data, name='t4', args=[path_])
-thread1.start()
-thread2.start()
-thread3.start()
-thread4.start()
+
+def get_users(pages):
+    users = []
+    for page in pages:
+        response = requests.get(f'https://reqres.in/api/users?page={page}')
+        currencies = response.json()['data']
+        users.extend(currencies)
+    return users
+
+
+def start_thread(path_to_save, users):
+    users = get_users(users)
+    threads = []
+    for list_slice in np.array_split(users, 4):
+        thread = threading.Thread(target=parse_users, args=(list(list_slice), path_to_save))
+        thread.start()
+        threads.append(thread)
+    for thread in threads:
+        thread.join()
+
+
+start_thread(path_, [1])
+
+
