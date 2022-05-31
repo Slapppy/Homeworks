@@ -26,14 +26,16 @@ class Queue:
     def add_item(self, human):
         self.list.append(human)
         self.lenght += 1
+        return human
 
     def clear(self, ):
         self.list = []
         self.lenght = 0
+        return self.lenght
 
     def contains(self, elem: Human):
         if elem in self.list:
-            return f'Элемент {elem} найден'
+            return elem
         else:
             return 'Такого элемента нет'
 
@@ -43,22 +45,26 @@ class Queue:
         else:
             del self.list[-1]
             self.lenght -= 1
+        return self.lenght
 
     def rnd_insert(self, name ,age , gender):
+        human = Human(name,age,gender)
         if len(self.list) == 0:
-            self.add_item(Human(name,age,gender))
+            self.add_item(human)
+            return human
         else:
-            self.list.insert(randint(1, len(self.list)), Human(name,age,gender))
+            self.list.insert(randint(1, len(self.list)), human)
+            return human
 
 
-store = Queue()
-
-tom = Human('Tom', 12, 'gay')
-tom.takeaqueae(store)
-bob = Human('Bob', 12, 'gay')
-bob.takeaqueae(store)
-dick = Human('Dick', 12, 'gay')
-dick.takeaqueae(store)
-store.rnd_insert('Dick3', 12, 'gay')
-
-print(store.list)
+# store = Queue()
+#
+# tom = Human('Tom', 12, 'gay')
+# tom.takeaqueae(store)
+# bob = Human('Bob', 12, 'gay')
+# bob.takeaqueae(store)
+# dick = Human('Dick', 12, 'gay')
+# dick.takeaqueae(store)
+# store.rnd_insert('Dick3', 12, 'gay')
+#
+# print(store.list)
