@@ -7,18 +7,21 @@ path_ = 'planet_data/'
 
 def parse_users(planet, path_to_save):
     for planets in planet:
+        # проверка на данные если их не пропускаем
         if len(planets['collection']['items']) == 0:
             continue
         path = path_to_save + str(planets['collection']['href'][42:52])
         os.mkdir(path)
+        # запись заголовка
         with open(path + "/title.txt", "w") as file:
             title = planets['collection']['items'][0]['data'][0]['title']
             file.writelines(f"{str(title)}")
+        # запись описания
         with open(path + "/description.txt", "w") as file:
             file.writelines(f"{str(planets['collection']['items'][0]['data'][0]['description'])}")
 
 
-
+# получение планет
 def get_planet():
     images = []
     for page in range(1, 31):
@@ -30,7 +33,7 @@ def get_planet():
 
 
 
-
+# запуск в 4 потоках
 def start_thread(path_to_save):
     users = get_planet()
     threads = []
