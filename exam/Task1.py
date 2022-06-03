@@ -1,21 +1,16 @@
 import os
-import shutil
 import numpy as np
 import threading
 import requests
 
-path_ = 'user_data/'
+path_ = 'planet_data/'
 
 def parse_users(planet, path_to_save):
     for planets in planet:
-        # img_parse = user['collection']['items'][0]['href']
-        # img = requests.get(img_parse, stream=True).json()[1][1:-1]
         if len(planets['collection']['items']) == 0:
             continue
         path = path_to_save + str(planets['collection']['href'][42:52])
         os.mkdir(path)
-        # with open(path + '/avatar.png', 'wb') as f:
-        #     shutil.copyfileobj(img.raw, f)
         with open(path + "/title.txt", "w") as file:
             title = planets['collection']['items'][0]['data'][0]['title']
             file.writelines(f"{str(title)}")
